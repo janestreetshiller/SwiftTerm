@@ -672,6 +672,18 @@ public final class BufferLine: CustomDebugStringConvertible {
             storage.attribute(at: index) != CharData.defaultAttr
     }
 
+    /// True when the row holds a character a reader could copy, so a paint that
+    /// fills the grid with spaces still counts as a blank row.
+    public func hasCopyableContent () -> Bool {
+        for i in 0..<storage.count {
+            let code = storage.logicalCode (at: i)
+            if code != 0 && code != 32 {
+                return true
+            }
+        }
+        return false
+    }
+
     /// True if the buffer line has any values stored in it, false otherwise
     public func hasAnyContent () -> Bool {
         for i in 0..<storage.count {
