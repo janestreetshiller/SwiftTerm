@@ -10413,10 +10413,9 @@ open class Terminal {
                 // this line has no content, which means that it's a blank line inserted
                 // somehow, or one of the trailing blank lines after the last actual content
                 // make a note of the line
-                // check that this line is a wrapped line, if so, add a line feed fragment
-                if !isWrapped {
-                    blanks.append (LineFragment.newLine (line: line - 1))
-                }
+                // A row with nothing to copy is a blank line in the copied text even
+                // when a full-screen paint made it look like a soft-wrap continuation.
+                blanks.append (LineFragment.newLine (line: line - 1))
                 
                 blanks.append(LineFragment (text: str, line: line, location: 0, length: str.count))
             }
