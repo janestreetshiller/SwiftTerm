@@ -10385,7 +10385,10 @@ open class Terminal {
         var isWrapped = false
         while line < end.row {
             bufferLine = buffer.lines [line]
-            isWrapped = bufferLine.isWrapped
+            // A full-screen program paints its rows with spaces, so a blank row can fill the
+            // grid and make the next row look like a soft wrap. A continuation of an empty
+            // row carries no text to continue, so the break is hard.
+            isWrapped = bufferLine.isWrapped && line > 0 && buf.lines [line - 1].hasAnyContent ()
             
             str = translateBufferLineToString (buffer: buf, line: line, start: 0, end: -1)
             
@@ -10427,7 +10430,7 @@ open class Terminal {
             if bufferLine.hasAnyContent () {
                 addBlanks ()
                 
-                isWrapped = bufferLine.isWrapped
+                isWrapped = bufferLine.isWrapped && end.row > 0 && buf.lines [end.row - 1].hasAnyContent ()
                 str = translateBufferLineToString (buffer: buf, line: end.row, start: 0, end: end.col)
                 if !isWrapped {
                     currentLine.add(fragment: LineFragment.newLine (line: line - 1))
